@@ -1,3 +1,5 @@
+
+import { populateGenreDropdown, getSelectedGenre, getRandomMovie, displayMovie, clearCurrentMovie, displayMovieCast } from "./helpers.js";
 const tmdbKey = "1c676b61f22a87367d76a5a1856be3ce";
 const tmdbBaseUrl = "https://api.themoviedb.org/3";
 const playBtn = document.getElementById("playBtn");
@@ -10,7 +12,7 @@ const getGenres = async () => {
     let response = await fetch(urlToFetch);
     if (response.ok) {
       let jsonResponse = await response.json();
-      console.log(jsonResponse);
+      // console.log(jsonResponse)
       let genres = jsonResponse.genres;
       return genres;
     }
@@ -30,7 +32,7 @@ const getMovies = async () => {
       let jsonResponse = await response.json();
       // console.log(jsonResponse);
       const movies = jsonResponse.results;
-      console.log(movies);
+      // console.log(movies)
       return movies;
     }
   } catch (error) {
@@ -48,16 +50,32 @@ const getMovieInfo = async (movie) => {
     let response = await fetch(urlToFetch);
     if (response.ok) {
       let jsonResponse = await response.json();
+      // console.log(jsonResponse)
       return jsonResponse;
     }
   } catch (error) {
     console.log(error.message);
   }
 };
-// getMovies()
-// getMovieInfo({id: 453395})
-// Gets a list of movies and ultimately displays the info of a random movie from the list
-const showRandomMovie = async () => {
+
+const getMovieCast = async (movie) => {
+  const movieId = movie.id
+  const getMovieCastEndpoint = `/movie/${movieId}/credits`;
+  const requestParams = `?api_key=${tmdbKey}`;
+  const urlToFetch = `${tmdbBaseUrl}${getMovieCastEndpoint}${requestParams}`;
+  try {
+    let response = await fetch(urlToFetch);
+    if(response.ok){
+      let jsonResponse = await response.json();
+      let cast = jsonResponse.cast
+      return cast
+    }
+  } catch (error) {
+    console.log(error.message)
+  }
+}
+// Gets a list of movies and ultimately displaysthe info of a random movie from the list
+export const showRandomMovie = async () => {
   const movieInfo = document.getElementById("movieInfo");
   if (movieInfo.childNodes.length > 0) {
     clearCurrentMovie();
@@ -65,8 +83,10 @@ const showRandomMovie = async () => {
   let movies = await getMovies();
   let randomMovie = getRandomMovie(movies);
   let info = await getMovieInfo(randomMovie);
-  console.log(info);
+  let movieCast = await getMovieCast(randomMovie)
+  // console.log(movieCast)
   displayMovie(info);
+  displayMovieCast(movieCast)
 };
 
 getGenres().then(populateGenreDropdown);

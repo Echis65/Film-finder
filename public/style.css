@@ -33,7 +33,6 @@ body {
     width:  50%;
     float:  left;
 }
-
 img#moviePoster {
     width:  100%;
     height:  auto;
@@ -47,10 +46,14 @@ img#moviePoster {
     line-height: 1.25;
 }
 
-#movieTitle, #movieOverview {
+#movieTitle, #movieOverview, #cast {
     padding:  32px;
 }
 
+#releaseDate{
+    font-size: 24px;
+    padding: 32px;
+}
 #playBtn {
     margin-top: 20px;
     font-size: 25px;
